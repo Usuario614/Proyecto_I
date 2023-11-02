@@ -1,11 +1,22 @@
+import os
 from fastapi import FastAPI
 import pandas as pd
 
-df_reviews = pd.read_csv(r'C:\Users\jotad\OneDrive\Documentos\Sebastian\PROYECTO\df_user_reviews_desanidada_final.csv', encoding='latin-1')
-df_items = pd.read_parquet(r'C:\Users\jotad\OneDrive\Documentos\Sebastian\PROYECTO\df_final_sample.parquet')
-df_steam = pd.read_csv(r'C:\Users\jotad\OneDrive\Documentos\Sebastian\PROYECTO\steam_games_final.csv', encoding='latin-1')
+# Obtiene la ruta del directorio actual del script
+dir_path = os.path.dirname(os.path.realpath(__file__))
+
+# Define las rutas relativas a los archivos
+reviews_file = os.path.join(dir_path, 'df_user_reviews_desanidada_final.csv')
+items_file = os.path.join(dir_path, 'df_final_sample.parquet')
+steam_file = os.path.join(dir_path, 'steam_games_final.csv')
+
+# Carga los archivos usando las rutas relativas
+df_reviews = pd.read_csv(reviews_file, encoding='latin-1')
+df_items = pd.read_parquet(items_file)
+df_steam = pd.read_csv(steam_file, encoding='latin-1')
 
 app = FastAPI()
+
 
 @app.get('/PlayTimeGenre/{genero}')
 def PlayTimeGenre(genero: str):
@@ -136,4 +147,4 @@ def sentiment_analysis(año: int):
     resultado = {"Negative": cantidad_negative, "Neutral": cantidad_neutral, "Positive": cantidad_positive}
 
     return {"Análisis de sentimiento para el año": resultado}
-
+'/opt/render/project/src/.venv/bin/python -m pip install --upgrade pip'
