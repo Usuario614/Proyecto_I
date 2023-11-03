@@ -3,3 +3,4 @@ pyarrow
 fastapi
 uvicorn
 pandas
+psikit-learn
