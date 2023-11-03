@@ -168,3 +168,44 @@ def recomendacion_juego(id_juego: int):
     recommended_games = df_steam['game_name'].iloc[top_indices]
 
     return {"juegos_recomendados": recommended_games.tolist()}
+
+from fastapi import FastAPI
+import pandas as pd
+from sklearn.metrics.pairwise import cosine_similarity
+
+app = FastAPI()
+
+# Supongamos que tienes un DataFrame llamado df_user_items que contiene información de los usuarios y los juegos que han jugado
+
+# Crear una matriz de usuarios e items (juegos) con los valores de playtime_forever
+user_item_matrix = df_items.pivot(index='user_id', columns='item_id', values='playtime_forever').fillna(0)
+
+# Asegurarte de que no haya valores NaN en la matriz
+user_item_matrix = user_item_matrix.fillna(0)
+
+# Asegúrate de eliminar las filas duplicadas en user_item_matrix
+user_item_matrix = user_item_matrix.loc[~user_item_matrix.index.duplicated(keep='first')]
+
+# Calcular la matriz de similitud entre usuarios
+user_similarity = cosine_similarity(user_item_matrix)
+
+@app.get("/recomendacion_usuario/{user_id}")
+def recomendacion_usuario(user_id: str):
+    # Obtener el índice del usuario de entrada
+    idx = user_item_matrix.index.get_loc(user_id)
+
+    # Obtener la similitud de los usuarios con el usuario de entrada
+    user_scores = list(enumerate(user_similarity[idx]))
+
+    # Ordenar los usuarios por similitud en orden descendente
+    user_scores = sorted(user_scores, key=lambda x: x[1], reverse=True)
+
+    # Obtener los índices de los usuarios similares (excluyendo el usuario de entrada)
+    top_user_indices = [i for i, _ in user_scores[1:6]]
+
+    # Obtener los juegos preferidos de los usuarios similares
+    recommended_games = user_item_matrix.columns[top_user_indices]
+
+    return {"user_id": user_id, "recommended_games": recommended_games.tolist()}
+
+
