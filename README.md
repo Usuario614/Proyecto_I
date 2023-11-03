@@ -35,4 +35,5 @@ Conclusión
 Este proyecto abarca todo el ciclo de procesamiento de datos, análisis, desarrollo de una API y creación de modelos de recomendación de videojuegos. Los modelos de recomendación ofrecen una experiencia personalizada a los usuarios y pueden aplicarse en un contexto real en una plataforma de juegos como Steam. La API proporciona una interfaz amigable para interactuar con el sistema de recomendación y obtener sugerencias de juegos.
 
 
-
+Link API https://six61144.onrender.com/docs
+#Video Youtube 
