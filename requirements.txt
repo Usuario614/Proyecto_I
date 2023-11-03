@@ -1,6 +1,9 @@
-fastparquet
-pyarrow
+asttokens
 fastapi
-uvicorn
+nltk
 pandas
-psikit-learn
+typing_extensions
+uvicorn
+pyarrow
+psutil
+scikit-learn
