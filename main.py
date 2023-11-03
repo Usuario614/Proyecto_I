@@ -147,4 +147,24 @@ def sentiment_analysis(año: int):
     resultado = {"Negative": cantidad_negative, "Neutral": cantidad_neutral, "Positive": cantidad_positive}
 
     return {"Análisis de sentimiento para el año": resultado}
-'/opt/render/project/src/.venv/bin/python -m pip install --upgrade pip'
+
+
+# Definimos la ruta y método para la recomendación de juegos por ítem
+@app.get('/recomendacion_juego/{id_juego}')
+def recomendacion_juego(id_juego: int):
+    # Obtenemos el índice del juego de entrada
+    idx = df_steam[df_steam['id'] == id_juego].index[0]
+
+    # Obtenemos la similitud del juego de entrada con todos los demás juegos
+    sim_scores = list(enumerate(cosine_sim[idx]))
+
+    # Ordenamos los juegos por similitud en orden descendente
+    sim_scores = sorted(sim_scores, key=lambda x: x[1], reverse=True)
+
+    # Obtenemos los índices de los juegos recomendados (excluyendo el juego de entrada)
+    top_indices = [i for i, _ in sim_scores[1:6]]
+
+    # Obtenemos los nombres de los juegos recomendados
+    recommended_games = df_steam['game_name'].iloc[top_indices]
+
+    return {"juegos_recomendados": recommended_games.tolist()}
